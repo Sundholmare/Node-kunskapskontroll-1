@@ -7,23 +7,28 @@ app.listen(3000, () => {
 
 /* CODE YOUR API HERE */
 
+// path till alla lights.
 app.get('/lights/:id', (req, res) => {
+    // variabel för att bedöma om lampan är av eller på.
     const state = req.query.state === 'on' ? true : false;
+    // variabel för färg. '#' tillagt för att det går ej att skriva i URLen.
     const color = '#' + req.query.color;
 
+    // uppdaterar objektet med ny info.
     db.get('devices')
     .find({type: 'Light', id: req.params.id})
     .assign({on: state, color: color})
     .value();
-
+    // kallar på update() functionen som uppdaterar statet.
     update();
-
+    // Skickar tillbaka ett response efter ett godkänt request.
     res.send(`${req.params.id} är ${req.query.state}`)
 })
 
-
+// path till AC:n.
 app.get('/ac', (req, res) => {
     const state = req.query.state === 'on' ? true : false;
+    // variabel för AC:ns temperatur.
     const temp = req.query.temp;
 
     db.get('devices')
@@ -36,6 +41,7 @@ app.get('/ac', (req, res) => {
     res.send(`AC:n är ${req.query.state}`)
 })
 
+// Path till blinds.
 app.get('/blinds', (req, res) => {
     const state = req.query.state === 'down' ? true : false;
 
@@ -49,7 +55,7 @@ app.get('/blinds', (req, res) => {
     res.send(`The blinds are ${req.query.state}`)
 })
 
-
+// Path till kameran.
 app.get('/camera', (req, res) => {
     const state = req.query.state === 'on' ? true : false;
 
@@ -63,7 +69,7 @@ app.get('/camera', (req, res) => {
     res.send(`The camera is ${req.query.state}`)
 })
 
-
+// Path till dammsugaren.
 app.get('/vacuum', (req, res) => {
     const state = req.query.state === 'cleaning' ? true : false;
 
@@ -77,7 +83,7 @@ app.get('/vacuum', (req, res) => {
     res.send(`The vacuum is ${req.query.state}`)
 })
 
-
+// Path till högtalaren.
 app.get('/speaker', (req, res) => {
     const state = req.query.state === 'on' ? true : false;
 
