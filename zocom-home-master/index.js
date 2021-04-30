@@ -36,7 +36,7 @@ app.get('/lights/:id', (req, res) => {
     }
     
     // Skickar tillbaka ett response efter ett godkänt request.
-    res.send(`${req.params.id} är ${req.query.state}`)
+    res.send(`${req.params.id} is ${req.query.state}`)
 })
 
 
@@ -53,7 +53,7 @@ app.get('/ac', (req, res) => {
 
     update();
 
-    res.send(`AC:n är ${req.query.state}`)
+    res.send(`The AC is ${req.query.state}`)
 })
 
 // Path till blinds.
