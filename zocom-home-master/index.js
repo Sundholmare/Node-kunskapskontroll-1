@@ -9,24 +9,34 @@ app.listen(3000, () => {
 
 // path till alla lights.
 app.get('/lights/:id', (req, res) => {
-        // variabel för att bedöma om lampan är av eller på.
-        const state = req.query.state === 'on' ? true : false;
-        // variabel för färg. '#' tillagt för att det går ej att skriva i URLen.
-        const color = `#${req.query.color}`
-        const bright = parseFloat(req.query.brightness)
+    // variabel för att bedöma om lampan är av eller på.
+    const state = req.query.state === 'on' ? true : false;
+    // variabel för färg. '#' tillagt för att det går ej att skriva i URLen.
+    const color = `#${req.query.color}`
 
-   
-         // uppdaterar objektet med ny info.
-         db.get('devices')
-         .find({type: 'Light', id: req.params.id})
-         .assign({on: state, color: color, brightness: bright})
-         .value();
-         // kallar på update() functionen som uppdaterar statet.
-         update();
-         // Skickar tillbaka ett response efter ett godkänt request.
-         res.send(`${req.params.id} är ${req.query.state}`)
-         resolve();
+    //variabel för att förenkla id:et i urlen.
+    let id = `LIG${req.params.id}`
+
+    // if-statement baserat på om urlen innehåller 'color'.
+    if(req.url.includes('color')){
+        db.get('devices')
+        .find({type: 'Light', id: id})
+        .assign({on: state, color: color})// objektet letar efter state och color.
+        .value();
+        
+        update();
+    }else{
+        // uppdaterar objektet med ny info.
+        db.get('devices')
+        .find({type: 'Light', id: id})
+        .assign({on: state}) // objektet letar efter state.
+        .value();
+        // kallar på update() functionen som uppdaterar statet.
+        update();
+    }
     
+    // Skickar tillbaka ett response efter ett godkänt request.
+    res.send(`${req.params.id} är ${req.query.state}`)
 })
 
 
